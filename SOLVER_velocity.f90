@@ -58,39 +58,39 @@ LOGICAL, DIMENSION(:), allocatable :: PlugArray	!Has value 1 for all layers that
 REAL, DIMENSION(:), allocatable :: rho			!Density array
 
 
-PRINT*, "Enter results label x (must be two digit number eg. 01 not 1)"
+WRITE(*,*) "Enter results label x (must be two digit number eg. 01 not 1)"
 READ*, x
 
-PRINT*, "Enter time interval dt"
+WRITE(*,*) "Enter time interval dt"
 READ*, dt
 
-PRINT*, "Enter upper boundary pressure P_0"
+WRITE(*,*) "Enter upper boundary pressure P_0"
 READ*, P_0
 
-PRINT*, "Enter value for alpha (alpha>0), to set the precise form of the exponential decay of density with height"
-PRINT*, "(velocity dependence ignored for now)"
+WRITE(*,*) "Enter value for alpha (alpha>0), to set the precise form of the exponential decay of density with height"
+WRITE(*,*) "(velocity dependence ignored for now)"
 READ*, alpha
 
 !Now that alpha and P_0 have been evaluated, we can evaluate K for use in the density variation function. 
 K=rho_0+alpha*P_0
 
 !Choose whether the initial velocity profile will be read from a file or defined by a function. 
-PRINT*, "Initial Velocity Profile from file (enter 1) or function (enter 2)?"
+WRITE(*,*) "Initial Velocity Profile from file (enter 1) or function (enter 2)?"
 READ*, FileOrFunction
 
 
 IF (FileOrFunction.EQ.1) THEN !Set system up and read initial profile from a file
-	PRINT*, "Enter input filename (don't include extension, should be .txt); filename" 
-	PRINT*, " without extension must be 11 characters long). Note file should"
-	PRINT*, "include a value of TotalLayers as the first data point and end with a blank line."		
+	WRITE(*,*) "Enter input filename (don't include extension, should be .txt); filename" 
+	WRITE(*,*) " without extension must be 11 characters long). Note file should"
+	WRITE(*,*) "include a value of TotalLayers as the first data point and end with a blank line."		
 	READ*, InputFilename
-	Print*, "Enter total number of time intervals"
+	WRITE(*,*) "Enter total number of time intervals"
 	READ*, TotalTime
-	PRINT*, "Specify boundary conditions."
-	PRINT*, "Enter upper boundary velocity:"
+	WRITE(*,*) "Specify boundary conditions."
+	WRITE(*,*) "Enter upper boundary velocity:"
 	READ*, v_top
-	PRINT*, "Enter lower boundary velocity:"
-	PRINT*, "(it is anticipated that this will normally be zero but the ability to change it is included in the code)"
+	WRITE(*,*) "Enter lower boundary velocity:"
+	WRITE(*,*) "(it is anticipated that this will normally be zero but the ability to change it is included in the code)"
 	READ*, v_bottom
 	
 	!Initialise velocity array from file:
@@ -111,18 +111,18 @@ IF (FileOrFunction.EQ.1) THEN !Set system up and read initial profile from a fil
 	ALLOCATE(rho(TotalLayers+2))
 	
 ELSE !set up system, reating initial profile from a function
-	PRINT*, "Choose preprogrammed function"
-	PRINT*, "Enter 1 for whole fluid at rest"
-	PRINT*, "Enter 2 for a linear velocity profile"
-	PRINT*, "Enter 3 for a parabolic profile with maximum at the centre"
-	PRINT*, "Enter 4 for a parabolic profile with maxima at the boundaries"
-	PRINT*, "Enter 5 for two plugs: one at each boundary, the upper one at the same velocity as the upper boundary, the other at rest"
-	PRINT*, "Enter 6 for two plugs: one at each boundary, the upper one at a lower velocity than the upper boundary, the other at rest"
-	PRINT*, "Do not enter a character other than integers 1-6"
+	WRITE(*,*) "Choose preprogrammed function"
+	WRITE(*,*) "Enter 1 for whole fluid at rest"
+	WRITE(*,*) "Enter 2 for a linear velocity profile"
+	WRITE(*,*) "Enter 3 for a parabolic profile with maximum at the centre"
+	WRITE(*,*) "Enter 4 for a parabolic profile with maxima at the boundaries"
+	WRITE(*,*) "Enter 5 for two plugs: one at each boundary, the upper one at the same velocity as the upper boundary, the other at rest"
+	WRITE(*,*) "Enter 6 for two plugs: one at each boundary, the upper one at a lower velocity than the upper boundary, the other at rest"
+	WRITE(*,*) "Do not enter a character other than integers 1-6"
 	READ*, FunctionChoice
-	Print*, "Enter total number of fluid layers (excluding container)"
+	WRITE(*,*) "Enter total number of fluid layers (excluding container)"
 	READ*, TotalLayers
-	Print*, "Enter total number of time intervals"
+	WRITE(*,*) "Enter total number of time intervals"
 	READ*, TotalTime
 	
 	!Allocate array dimensions
@@ -132,11 +132,11 @@ ELSE !set up system, reating initial profile from a function
 	ALLOCATE(PlugArray(TotalLayers+2))
 	ALLOCATE(rho(TotalLayers+2))
 	
-	PRINT*, "Specify boundary conditions."
-	PRINT*, "Enter upper boundary velocity:"
+	WRITE(*,*) "Specify boundary conditions."
+	WRITE(*,*) "Enter upper boundary velocity:"
 	READ*, v_top
-	PRINT*, "Enter lower boundary velocity:"
-	PRINT*, "(it is anticipated that this will normally be zero but the ability to change it is included in the code)"
+	WRITE(*,*) "Enter lower boundary velocity:"
+	WRITE(*,*) "(it is anticipated that this will normally be zero but the ability to change it is included in the code)"
 	READ*, v_bottom
 	
 	!Initialise velocity array
@@ -152,9 +152,9 @@ END IF
 H=(TotalLayers+1)*d
 
 !Output to command line the command that must now be entered into gnuplot in order to plot these results
-PRINT*, "Copy the following lines into Gnuplot to plot these results"
-PRINT*, "load 'RhoGnuplotCommandsPng"//x//".txt'"
-PRINT*, "load 'RhoGnuplotCommandsFig"//x//".txt'"
+WRITE(*,*) "Copy the following lines into Gnuplot to plot these results"
+WRITE(*,*) "load 'RhoGnuplotCommandsPng"//x//".txt'"
+WRITE(*,*) "load 'RhoGnuplotCommandsFig"//x//".txt'"
 
 !Initialise density array
 Do n=1, TotalLayers+2
@@ -279,7 +279,7 @@ DO t=2, TotalTime+1									!Time ticker must run from 1 since this is the index
 	!Recalculate density array
 	Do n=2, TotalLayers+1
 		rho(n) = DensityRelation(n,v)
-		PRINT*, rho(n)
+		WRITE(*,*) rho(n)
 		IF (rho(n).LE.0) THEN
 			GO TO 30
 		END IF
@@ -365,7 +365,7 @@ CLOSE(4)
 GO TO 31
 
 30 CONTINUE
-PRINT*, "Error: Negative density produced"
+WRITE(*,*) "Error: Negative density produced"
 
 31 CONTINUE
 
