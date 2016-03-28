@@ -9,12 +9,18 @@ PROGRAM SOLVER_rho3
 	use davinci_1_output_final
 	use davinci_1_output
 	use davinci_2_initialise
-	use davinci_2_iterate 
+	use davinci_2_iterate
 
 	IMPLICIT NONE
 
+	character(8)  :: date
+  character(10) :: time
+
 	!Initialise system
 	call initialise
+
+	call date_and_time(DATE=date, TIME=time)
+	write(*,*) date, time
 
 	!Write initial system to file
 	call output
