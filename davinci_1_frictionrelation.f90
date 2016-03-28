@@ -1,5 +1,6 @@
 !CK Revell, March 2016
 !Module containing the friction relation for the da vinci fluids solver
+!Relates dynamic friction at a boundary to the density on either side of those boundaries 
 
 module davinci_1_frictionrelation
 
