@@ -17,7 +17,7 @@ contains
   subroutine iterate
 
     !Calculate velocity profile at all remaining timesteps and write to file.
-    DO t=2, TotalTime+1									!Time ticker must run from 1 since this is the index of the first array element
+    DO t=1, TotalTime+1									!Time ticker must run from 1 since this is the index of the first array element
 
       !Refresh PlugArray for each new timestep
       Do n=1, TotalLayers+2
@@ -29,7 +29,6 @@ contains
         Acceleration(n)=0.0
       END DO
 
-
       DO n=2, TotalLayers+1		!Note starts from 2 and ends at TotalLayers+1 because the n=1 and n=TotalLayers+2 layers are boundaries whose velocities are controlled externally and do not change.
 
         !Compute velocity differences
@@ -39,7 +38,6 @@ contains
         !Compute signs of upper and lower velocity differences
         s_1=SIGN(1.0,dv_1)
         s_2=SIGN(1.0,dv_2)
-
 
         !Compute normal force on upper edge of layer n
         MassAboveLayer=0
@@ -122,7 +120,7 @@ contains
 
     END DO
 
-    call output 
+    call output
 
   end subroutine iterate
 end module davinci_2_iterate

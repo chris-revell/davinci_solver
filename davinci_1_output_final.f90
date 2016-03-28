@@ -12,30 +12,27 @@ contains
   subroutine output_final
 
     !Create file to store results parameters
-    OPEN(4, FILE = "data/RhoParameters"//x//".txt")
-    WRITE(4,*) "Results label: "//x
-    IF (FileOrFunction.EQ.1) THEN
-      WRITE(4,*) "Input filename: "//InputFilename//".txt"
-    ELSE
-      WRITE(4,*) "Initial velocity profile function choice:"
-      WRITE(4,*) FunctionChoice
-    END IF
-    WRITE(4,*) "Total time:"
-    WRITE(4,*) TotalTime
-    WRITE(4,*) "Total number of fluid layers:"
-    WRITE(4,*) TotalLayers
-    WRITE(4,*) "dt:"
-    WRITE(4,*) dt
-    WRITE(4,*) "P_0:"
-    WRITE(4,*) P_0
-    WRITE(4,*) "Static friction coefficient"
-    WRITE(4,*) mu_2
-    WRITE(4,*) "Accuracy, epsilon:"
-    WRITE(4,*) epsilon
-    WRITE(4,*) "Layer thickness, d:"
-    WRITE(4,*) d
-    WRITE(4,*) "Alpha:"
-    WRITE(4,*) alpha
+    OPEN(4, FILE = "data/"//output_folder//"/Parameters.txt")
+
+!**********************************************************************
+!    IF (FileOrFunction.EQ.1) THEN
+!      WRITE(4,*) "Input filename: "//InputFilename//".txt"
+!    ELSE
+!      WRITE(4,*) "Initial velocity profile function choice:"
+!      WRITE(4,*) FunctionChoice
+!    END IF
+!*********************************************************************
+
+    WRITE(4,*) "FunctionChoice:", FunctionChoice
+    WRITE(4,*) "Total time:", TotalTime
+    WRITE(4,*) "Total number of fluid layers:", TotalLayers
+    WRITE(4,*) "dt:", dt
+    WRITE(4,*) "Upper boundary pressure P_0:", P_0
+    WRITE(4,*) "Static friction coefficient:", mu_2
+    WRITE(4,*) "Accuracy, epsilon:", epsilon
+    WRITE(4,*) "Layer thickness, d:", d
+    WRITE(4,*) "Alpha:", alpha
+    WRITE(4,*) "Loose random packing, rho_0:", rho_0
     CLOSE(4)
 
   end subroutine output_final

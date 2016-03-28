@@ -13,14 +13,8 @@ PROGRAM SOLVER_rho3
 
 	IMPLICIT NONE
 
-	character(8)  :: date
-  character(10) :: time
-
 	!Initialise system
 	call initialise
-
-	call date_and_time(DATE=date, TIME=time)
-	write(*,*) date, time
 
 	!Write initial system to file
 	call output
@@ -29,7 +23,7 @@ PROGRAM SOLVER_rho3
 	call iterate
 
 	!Create gnuplot command file for plotting data
-!	call gnuplot_output
+	call gnuplot_output
 
 	!Output system parameters to file
 	call output_final

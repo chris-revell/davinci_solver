@@ -1,3 +1,0 @@
-
-    Infinity,     Infinity,     Infinity,     Infinity,     Infinity, ************, ************, ************, ************,     5.000000,     0.000000, 
-    Infinity,     Infinity,     Infinity,     Infinity,     Infinity, ************, ************, ************, ************,     5.000000,     0.000000, 
