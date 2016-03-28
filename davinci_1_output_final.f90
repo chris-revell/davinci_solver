@@ -12,7 +12,7 @@ contains
   subroutine output_final
 
     !Create file to store results parameters
-    OPEN(4, FILE = "RhoParameters"//x//".txt")
+    OPEN(4, FILE = "data/RhoParameters"//x//".txt")
     WRITE(4,*) "Results label: "//x
     IF (FileOrFunction.EQ.1) THEN
       WRITE(4,*) "Input filename: "//InputFilename//".txt"

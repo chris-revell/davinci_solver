@@ -11,13 +11,13 @@ contains
 
 		!Output to command line the command that must now be entered into gnuplot in order to plot these results
 		WRITE(*,*) "Copy the following lines into Gnuplot to plot these results"
-		WRITE(*,*) "load 'RhoGnuplotCommandsPng"//x//".txt'"
-		WRITE(*,*) "load 'RhoGnuplotCommandsFig"//x//".txt'"
+		WRITE(*,*) "load 'data/RhoGnuplotCommandsPng"//x//".txt'"
+!		WRITE(*,*) "load 'data/RhoGnuplotCommandsFig"//x//".txt'"
 
 		!Create gnuplot command files for both fig and png outputs
-		OPEN(3, FILE = "RhoGnuplotCommandsPng"//x//'.txt')
-		!WRITE (3,*) 'set terminal png'
-		!WRITE (3,*) 'set output "RhoPlot'//x//'.png"'
+		OPEN(3, FILE = "data/RhoGnuplotCommandsPng"//x//'.txt')
+		WRITE (3,*) 'set terminal png'
+		WRITE (3,*) 'set output "data/RhoPlot'//x//'.png"'
 		WRITE (3,*) 'set xlabel "Fluid height (n)"'
 		WRITE (3,"(A17,I4,A24)") 'set xrange [ 0 : ', TotalLayers+2, ' ] noreverse nowriteback'
 		WRITE (3,*) 'set xlabel  offset character 3, -2, 0 font "" textcolor lt -1 rotate by 90'
@@ -26,7 +26,7 @@ contains
 		WRITE (3,"(A17,I4,A24)") 'set yrange [ 0 : ', TotalTime, ' ] noreverse nowriteback'
 		WRITE (3,*) 'set zlabel "Velocity"'
 		WRITE (3,*) 'set zlabel  offset character -2, 0, 0 font "" textcolor lt -1 norotate'
-		WRITE (3,*) 'splot "RhoResults'//x//'.txt" matrix with pm3d  t  "Evolution of velocity profile with time"'
+		WRITE (3,*) 'splot "data/RhoResults'//x//'.txt" matrix with pm3d  t  "Evolution of velocity profile with time"'
 		CLOSE(3)
 		!OPEN(2, FILE = "RhoGnuplotCommandsFig"//x//'.txt')
 		!WRITE (2,*) 'set terminal fig color'
