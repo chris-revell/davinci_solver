@@ -15,8 +15,8 @@ contains
     integer :: n
 
     !Open file for results
-    OPEN(6,FILE = 'data/velocity'//x//'.txt')
-    OPEN(7,FILE = 'data/density'//x//'.txt')
+    OPEN(6,FILE = 'data/'//output_folder//'/velocity.txt')
+    OPEN(7,FILE = 'data/'//output_folder//'/density.txt')
 
     !Write velocity profile to results file
     write(6,*)

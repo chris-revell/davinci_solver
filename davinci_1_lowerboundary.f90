@@ -11,9 +11,9 @@ contains
 
   real function lowerboundary(t)
 
-    real(intent(in)) :: t
+    integer, intent(in) :: t
 
-    lowerboundary = 0
+    lowerboundary = 0.0
 
   end function lowerboundary
 

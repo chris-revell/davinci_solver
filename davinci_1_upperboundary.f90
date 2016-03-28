@@ -11,9 +11,9 @@ contains
 
   real function upperboundary(t)
 
-    real(intent(in)) :: t
+    integer, intent(in) :: t
 
-    lowerboundary = 20
+    upperboundary = 20
 
   end function upperboundary
 
