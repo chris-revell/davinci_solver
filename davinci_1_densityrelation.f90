@@ -13,9 +13,10 @@ contains
 
   REAL FUNCTION DensityRelation(n)
     INTEGER, intent(in) :: n
-    REAL :: z
-    z=REAL(n-1)*d
-    DensityRelation = K*EXP(alpha*g*(H-z))
+!    REAL :: z
+!    z=REAL(n-1)*d
+!    DensityRelation = K*EXP(alpha*g*(H-z))
+    DensityRelation = 1
   END FUNCTION DensityRelation
 
 end module davinci_1_densityrelation
@@ -39,4 +40,4 @@ end module davinci_1_densityrelation
 !REAL FUNCTION VelocityRelation(v)
 !  REAL v
 !  VelocityRelation = -v/25000
-!END FUNCTION		
+!END FUNCTION

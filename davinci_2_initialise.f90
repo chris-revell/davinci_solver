@@ -27,7 +27,7 @@ contains
     P_0         = 1
     alpha       = 1
     TotalTime   = 1000
-    TotalLayers = 1000
+    TotalLayers = 10
   	K           = rho_0+alpha*P_0    !Now that alpha and P_0 have been evaluated, we can evaluate K for use in the density variation function.
     H           = TotalLayers*d      !Now that TotalLayers has been evaluated, evaluate H
 

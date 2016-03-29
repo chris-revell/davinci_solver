@@ -14,7 +14,7 @@ contains
 		WRITE (3,*) 'set terminal png'
 		WRITE (3,*) 'set output "data/'//output_folder//'/DensityPlot.png"'
 		WRITE (3,*) 'set xlabel "Fluid height (n)"'
-		WRITE (3,"(A17,I4,A24)") 'set xrange [ 0 : ', TotalLayers+2, ' ] noreverse nowriteback'
+		WRITE (3,"(A17,I4,A24)") 'set xrange [ 0 : ', TotalLayers, ' ] noreverse nowriteback'
 		WRITE (3,*) 'set xlabel  offset character 3, -2, 0 font "" textcolor lt -1 rotate by 90'
 		WRITE (3,*) 'set ylabel "Time"'
 		WRITE (3,*) 'set ylabel  offset character -3, -2, 0 font "" textcolor lt -1 norotate'
@@ -22,11 +22,13 @@ contains
 		WRITE (3,*) 'set zlabel "Velocity"'
 		WRITE (3,*) 'set zlabel  offset character -2, 0, 0 font "" textcolor lt -1 norotate'
 		WRITE (3,*) 'splot "data/'//output_folder//'/density.txt" matrix with pm3d  t  "Evolution of velocity profile with time"'
+
 		WRITE	(3,*) ""
+
 		WRITE (3,*) 'set terminal png'
 		WRITE (3,*) 'set output "data/'//output_folder//'/VelocityPlot.png"'
 		WRITE (3,*) 'set xlabel "Fluid height (n)"'
-		WRITE (3,"(A17,I4,A24)") 'set xrange [ 0 : ', TotalLayers+2, ' ] noreverse nowriteback'
+		WRITE (3,"(A17,I4,A24)") 'set xrange [ 0 : ', TotalLayers, ' ] noreverse nowriteback'
 		WRITE (3,*) 'set xlabel  offset character 3, -2, 0 font "" textcolor lt -1 rotate by 90'
 		WRITE (3,*) 'set ylabel "Time"'
 		WRITE (3,*) 'set ylabel  offset character -3, -2, 0 font "" textcolor lt -1 norotate'

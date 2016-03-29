@@ -10,31 +10,25 @@ module davinci_1_plugtreatment
 
 contains
 
-  SUBROUTINE PlugTreatment(n, TotalLayers, v, Acceleration, PlugArray, mu_1)
+  SUBROUTINE PlugTreatment(n)
 
-		INTEGER TotalLayers
-		INTEGER n
-		REAL, DIMENSION(TotalLayers+2), INTENT(INOUT) :: v
-		REAL, DIMENSION(TotalLayers+2), INTENT(INOUT) :: Acceleration
-		LOGICAL, DIMENSION(TotalLayers+2), INTENT(INOUT):: PlugArray
-		REAL, DIMENSION(TotalLayers+1), INTENT(IN) :: mu_1
-
-		INTEGER i
+    INTEGER, INTENT(IN) :: n      !Layer at which PlugTreatment is called
+		INTEGER :: i
 		INTEGER :: a=0				      	!Plug layer counter. Number of layers in plug.
 		INTEGER :: b=0					      !Plug counter after split
-		REAL :: PlugCondition = 0.0		!Effectively dv_2. Value allows us to determine the end of a plug.
-		REAL PlugAcceleration
-		REAL W							          !Pressure applied to top surface of plug
-		INTEGER s_bottom				      !Redefine s_1 inside subroutine for the bottom layer of the plug
-		INTEGER s_top					        !Redefine s_2 inside subroutine for the top layer of the plug
-		REAL F_bottom					        !Force on bottom of plug
-		REAL F_top						        !Force on top of plug
-		REAL PlugMass					        !PlugMass is the mass of the plug
-		REAL MassAbovePlug				    !MassAbovePlug is the mass of fluid above the plug
-		REAL RequiredForce				    !Force that must be applied to the top of a layer in the plug to maintain the same acceleration for this layer as for the rest of the plug
-		REAL FrictionalForce			    !Maximum force that can be applied at the top of the layer within the plug
-		REAL F_F_1						        !Frictional force expression too long, so expression broken into parts
-		REAL R_F_1						        !Same for required force
+		REAL    :: PlugCondition  		!Effectively dv_upper. Value allows us to determine the end of a plug.
+		REAL    :: PlugAcceleration
+		REAL    :: W							    !Pressure applied to top surface of plug
+		INTEGER :: s_bottom				    !Redefine sign_lower inside subroutine for the bottom layer of the plug
+		INTEGER :: s_top					    !Redefine sign_upper inside subroutine for the top layer of the plug
+		REAL    :: F_bottom					  !Force on bottom of plug
+		REAL    :: F_top						  !Force on top of plug
+		REAL    :: PlugMass					  !PlugMass is the mass of the plug
+		REAL    :: MassAbovePlug			!MassAbovePlug is the mass of fluid above the plug
+		REAL    :: RequiredForce			!Force that must be applied to the top of a layer in the plug to maintain the same acceleration for this layer as for the rest of the plug
+		REAL    :: FrictionalForce		!Maximum force that can be applied at the top of the layer within the plug
+		REAL    :: F_F_1						  !Frictional force expression too long, so expression broken into parts
+		REAL    :: R_F_1						  !Same for required force
 
 		a=0
 		b=0
@@ -141,19 +135,19 @@ contains
 
 		!The following terms prevent layers from overshooting plug formation
 
-		dv_1 = v(n)-v(n-1)
-		dv_2 = v(n+b)-v(n+b-1)
-		dv_1_prime = dv_1 + PlugAcceleration*dt
-		dv_2_prime = dv_2 - PlugAcceleration*dt
+		dv_lower = v(n)-v(n-1)
+		dv_upper = v(n+b)-v(n+b-1)
+		dv_lower_prime = dv_lower + PlugAcceleration*dt
+		dv_upper_prime = dv_upper - PlugAcceleration*dt
 
-		IF ((dv_1*dv_1_prime).GE.0) THEN
+		IF ((dv_lower*dv_lower_prime).GE.0) THEN
 			GO TO 1
 		ELSE
 			GO TO 2
 		END IF
 
 		1 CONTINUE
-		IF ((dv_2*dv_2_prime).GE.0) THEN
+		IF ((dv_upper*dv_upper_prime).GE.0) THEN
 			DO i=0, b-1
 				v(n+i)=v(n+i)+PlugAcceleration*dt
 			END DO
@@ -165,13 +159,13 @@ contains
 		GO TO 3
 
 		2 CONTINUE
-		IF ((dv_2*dv_2_prime).GE.0) THEN
+		IF ((dv_upper*dv_upper_prime).GE.0) THEN
 			DO i=0, b-1
 				v(n+i)=v(n-1)
 			END DO
 			GO TO 3
 		ELSE
-			IF ((ABS(dv_2)).LE.(ABS(dv_1))) THEN		!Forms plug with the first one it catches up to
+			IF ((ABS(dv_upper)).LE.(ABS(dv_lower))) THEN		!Forms plug with the first one it catches up to
 				DO i=0, b-1
 					v(n+i)=v(n+b)
 				END DO

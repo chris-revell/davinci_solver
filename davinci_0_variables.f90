@@ -18,12 +18,12 @@ module davinci_0_variables
   REAL P													!Normal force
   REAL F_1												!Lower frictional force
   REAL F_2												!Upper frictional force
-  REAL dv_1												!Lower velocity difference
-  REAL dv_2												!Upper velocity difference
-  REAL dv_1_prime									!Lower velocity difference after acceleration of layer
-  Real dv_2_prime									!Upper velocity difference after acceleration of layer
-  REAL s_1												!Sign of lower velocity difference
-  REAL s_2												!Sign of upper velocity difference
+  REAL dv_lower												!Lower velocity difference
+  REAL dv_upper												!Upper velocity difference
+  REAL dv_lower_prime									!Lower velocity difference after acceleration of layer
+  Real dv_upper_prime									!Upper velocity difference after acceleration of layer
+  REAL sign_lower												!Sign of lower velocity difference
+  REAL sign_upper												!Sign of upper velocity difference
 !  REAL v_top											  !Boundary condition - upper boundary velocity
 !  REAL v_bottom									  !Boundary condition - lower boundary velocity (normally zero)
   INTEGER t												!Time counter
