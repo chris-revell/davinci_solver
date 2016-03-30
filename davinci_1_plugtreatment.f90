@@ -30,23 +30,29 @@ contains
 		REAL    :: F_F_1						  !Frictional force expression too long, so expression broken into parts
 		REAL    :: R_F_1						  !Same for required force
 
-		a=0
+		a=1
 		b=0
 		PlugCondition=0.0
 
 		!Calculate number of layers in plug
-  81	IF ( a .LE. (TotalLayers-n+1)) then
-			IF (PlugCondition.LT.epsilon) then
-				PlugCondition = ABS(v(n+a+1)-v(n+a))
-				a=a+1
-				go to 81
-			ELSE
-			go to 82
-			ENDIF
-		ELSE
-		   go to 82
-		ENDIF
- 82		continue
+    !Keep adding incrementing a for as many layers as satisfy the condition
+    !that upper boundary velocity displacement is less than epsilon
+    !Then a
+    DO WHILE(ABS(v(n+a)-v(n+a-1)).LT.epsilon) 
+      a=a+1
+    ENDDO
+!  81	IF ( a .LE. (TotalLayers-n+1)) then
+!			IF (PlugCondition.LT.epsilon) then
+!				PlugCondition = ABS(v(n+a+1)-v(n+a))
+!				a=a+1
+!				go to 81
+!			ELSE
+!			go to 82
+!			ENDIF
+!		ELSE
+!		   go to 82
+!		ENDIF
+! 82		continue
 
 
 

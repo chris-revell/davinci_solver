@@ -5,6 +5,7 @@ module davinci_1_velocityupdate
 
   use davinci_0_variables
   use davinci_0_arrays
+  use davinci_1_plugtreatment
 
   implicit none
 
@@ -31,11 +32,12 @@ contains
       P = P_0 + MassAboveLayer*g    !External pressure plus sum of masses of layers above, times gravitational constant
 
       IF (PlugArray(n)) THEN
+        !PlugArray(n) = TRUE means layer is part of a plug and its acceleration will be calculated later in the plug treatment routine.
         !Do nothing and skip to next layer
         call CYCLE
       ELSE
-        IF (ABS(dv_upper).LE.epsilon) THEN	!Plug, so use plug treatment to find acceleration
-          CALL PlugTreatment(n, TotalLayers, v, Acceleration, PlugArray, mu_1)
+        IF (ABS(dv_upper).LE.epsilon) THEN	!About to form the bottom layer of a plug.
+          CALL PlugTreatment(n)
         ELSE							!Not plug, so compute acceleration from forces
           F_1=-sign_lower*(P+rho(n)*g*d)*mu_1(n-1)
           F_2=sign_upper*P*mu_1(n)
