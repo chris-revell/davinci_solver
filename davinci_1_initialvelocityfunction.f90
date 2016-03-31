@@ -17,7 +17,7 @@ contains
     INTEGER FunctionChoice
 
     IF (FunctionChoice.EQ.1) THEN !At rest
-      InitialVelocityFunction = 0
+      InitialVelocityFunction = 10.0
 
 !    ELSE IF (FunctionChoice.EQ.2) THEN	!Linear
 !      InitialVelocityFunction = v_bottom + (n-1)*(v_top-v_bottom)/(TotalLayers+1)

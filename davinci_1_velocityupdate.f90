@@ -31,10 +31,13 @@ contains
       END DO
       P = P_0 + MassAboveLayer*g    !External pressure plus sum of masses of layers above, times gravitational constant
 
+!Everything below needs to be reassessed
+!******************************************************************************
+
       IF (PlugArray(n)) THEN
         !PlugArray(n) = TRUE means layer is part of a plug and its acceleration will be calculated later in the plug treatment routine.
         !Do nothing and skip to next layer
-        call CYCLE
+        CYCLE
       ELSE
         IF (ABS(dv_upper).LE.epsilon) THEN	!About to form the bottom layer of a plug.
           CALL PlugTreatment(n)
@@ -89,3 +92,6 @@ contains
 
 
     END DO
+
+  end subroutine velocityupdate
+end module davinci_1_velocityupdate

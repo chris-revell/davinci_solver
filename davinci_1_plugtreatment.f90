@@ -18,13 +18,15 @@ contains
 		INTEGER :: b=0					      !Plug counter after split
 		REAL    :: PlugCondition  		!Effectively dv_upper. Value allows us to determine the end of a plug.
 		REAL    :: PlugAcceleration
-		REAL    :: W							    !Pressure applied to top surface of plug
+		REAL    :: normalforce		    !Pressure applied to top surface of plug
 		INTEGER :: s_bottom				    !Redefine sign_lower inside subroutine for the bottom layer of the plug
 		INTEGER :: s_top					    !Redefine sign_upper inside subroutine for the top layer of the plug
 		REAL    :: F_bottom					  !Force on bottom of plug
 		REAL    :: F_top						  !Force on top of plug
 		REAL    :: PlugMass					  !PlugMass is the mass of the plug
 		REAL    :: MassAbovePlug			!MassAbovePlug is the mass of fluid above the plug
+
+
 		REAL    :: RequiredForce			!Force that must be applied to the top of a layer in the plug to maintain the same acceleration for this layer as for the rest of the plug
 		REAL    :: FrictionalForce		!Maximum force that can be applied at the top of the layer within the plug
 		REAL    :: F_F_1						  !Frictional force expression too long, so expression broken into parts
@@ -38,30 +40,17 @@ contains
     !Keep adding incrementing a for as many layers as satisfy the condition
     !that upper boundary velocity displacement is less than epsilon
     !Then a
-    DO WHILE(ABS(v(n+a)-v(n+a-1)).LT.epsilon) 
+    DO WHILE(ABS(v(n+a)-v(n+a-1)).LT.epsilon)
       a=a+1
     ENDDO
-!  81	IF ( a .LE. (TotalLayers-n+1)) then
-!			IF (PlugCondition.LT.epsilon) then
-!				PlugCondition = ABS(v(n+a+1)-v(n+a))
-!				a=a+1
-!				go to 81
-!			ELSE
-!			go to 82
-!			ENDIF
-!		ELSE
-!		   go to 82
-!		ENDIF
-! 82		continue
+    !a now equals the number of layers in the plug
 
-
-
-		!Set W and MassAbovePlug
+		!Find mass above plug and calculate normalfoce on plug
 		MassAbovePlug = 0
 		DO i=n+a, TotalLayers+1
 			MassAbovePlug = MassAbovePlug + rho(i)*d
 		END DO
-		W = MassAbovePlug*g + P_0
+		Normalforce = MassAbovePlug*g + P_0
 
 		!Set PlugMass
 		PlugMass = 0
@@ -69,35 +58,40 @@ contains
 			PlugMass = PlugMass +rho(i)*d
 		END DO
 
-
-		s_bottom=SIGN(1.0,(v(n)-v(n-1)))						!Signs of velocity differences at the top and bottom of the plug
+    !Signs of velocity differences at the top and bottom of the plug
+		s_bottom=SIGN(1.0,(v(n)-v(n-1)))
 		s_top=SIGN(1.0,(v(n+a)-v(n+a-1)))
 
-		IF (((n+a-1).EQ.TotalLayers+1).AND.(ABS(v(n+a)-v(n+a-1)).LT.epsilon)) THEN	!Plug stationary relative to upper boundary
-			F_bottom=-REAL(s_bottom)*(W+PlugMass*g)*mu_1(n-1)
-			F_top=-F_bottom
-		ELSE
-			F_top=REAL(s_top)*W*mu_1(n+a-1)
-		END IF
+    !When calculating acceleration of plug, must consider several conditions
+    !Firstly, plug stationary relative to upper boundary
+		IF (((n+a).EQ.TotalLayers+2).AND.(ABS(v(n+a)-v(n+a-1)).LT.epsilon)) THEN
+      F_top    = REAL(s_bottom)*MIN(ABS(F_bottom), normalforce*mu_2)         !Force on top of plug is equal to -force on bottom of plug, up to maximum of normalforce*mu_2 (static friction)
+			F_bottom = -REAL(s_bottom)*(normalforce+PlugMass*g)*mu_1(n-1)          !Force on bottom of plug is as usual
+    !Secondly, plug stationary relative to lower boundary
+    ELSEIF ((n.EQ.2).AND.(ABS(v(n)-v(n-1)).LT.epsilon)) THEN
+      F_top    = REAL(s_top)*normalforce*mu_1(n+a-1)                        !Force on top of plug from dynamic friction with layer moving relative to plug.
+      F_bottom = REAL(s_top)*MIN(ABS(F_top), (normalforce+PlugMass*g)*mu_2) !Force on bottom of plug from static frictio, equal and opposite to force on top of plug up to the maximum value of static friction.
+    !Thirdly, plug stationary relative to and in contact with both boundaries
+    ELSEIF ((((n+a).EQ.TotalLayers+2).AND.(ABS(v(n+a)-v(n+a-1)).LT.epsilon)).AND.((n.EQ.2).AND.(ABS(v(n)-v(n-1)).LT.epsilon))) THEN
+      F_bottom = 0      !No force on either edge of the plug
+      F_top    = 0
+    !Otherwise, no interactions with boundaries so can calculate acceleeration as usual
+    ELSE
+      F_top    = REAL(s_top)*normalforce*mu_1(n+a-1)
+      F_bottom = -REAL(s_bottom)*(normalforce+PlugMass*g)*mu_1(n-1)
+    ENDIF
 
-		IF ((n.EQ.2).AND.(ABS(v(n)-v(n-1)).LT.epsilon)) THEN 		!Condition for plug stationary relative to lower boundary
-			IF (ABS(F_top).GT.ABS((W+PlugMass*g)*mu_2)) THEN
-				F_bottom=-REAL(s_top)*(W+PlugMass*g)*mu_2
-			ELSE
-				F_bottom=-F_top			!This is the max value F_bottom can take in this case, as required for splitting calculations. It is not necessarily the force to use for calculating the plug acceleration.
-			END IF
-		ELSE
-			F_bottom=-REAL(s_bottom)*(W+PlugMass*g)*mu_1(n-1)	!Force on bottom of plug for general plug moving relative to lower boundary or not touching lower boundary
-		END IF
-
+    !Calculate plug acceleration from forces on either edge of plug.
 		PlugAcceleration = (F_top + F_bottom)/PlugMass
 
+    !Set acceleration of layers within the plug
+    do i = n, n+a-1
+      Acceleration(i) = PlugAcceleration
+    enddo
 
-		!Also need to consider behaviour if both boundaries are in contact with plug and stationary relative to it
-		IF ((((n+a-1).EQ.TotalLayers+1).AND.(ABS(v(n+a)-v(n+a-1)).LT.epsilon)).AND.((n.EQ.1).AND.(ABS(v(n)-v(n-1)).LT.epsilon))) THEN
-			PlugAcceleration=0
-		END IF
 
+!This section deals with plug splitting
+!****************************************************************************************
 
 		DO i=0, (a-1)
 
@@ -123,7 +117,7 @@ contains
 		DO i=n+b, TotalLayers+1
 			MassAbovePlug = MassAbovePlug + rho(i)*d
 		END DO
-		W = MassAbovePlug*g + P_0
+		normalforce = MassAbovePlug*g + P_0
 
 		!Set new PlugMass
 		PlugMass = 0
@@ -134,11 +128,14 @@ contains
 		s_bottom=SIGN(1.0,(v(n)-v(n-1)))
 		s_top=SIGN(1.0,(v(n+b)-v(n+b-1)))
 
-		F_top=REAL(s_bottom)*W*mu_1(n+b-1)		!No need to redefine F_bottom
+		F_top=REAL(s_bottom)*normalforce*mu_1(n+b-1)		!No need to redefine F_bottom
 
 		PlugAcceleration = (F_top + F_bottom)/PlugMass
 
 
+
+!This section repeated in velocityupdate?
+!***************************************************************************
 		!The following terms prevent layers from overshooting plug formation
 
 		dv_lower = v(n)-v(n-1)

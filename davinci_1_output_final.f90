@@ -11,6 +11,8 @@ contains
 
   subroutine output_final
 
+    CHARACTER(len=23) :: systemcall
+
     !Create file to store results parameters
     OPEN(4, FILE = "data/"//output_folder//"/Parameters.txt")
 
@@ -34,6 +36,14 @@ contains
     WRITE(4,*) "Alpha:", alpha
     WRITE(4,*) "Loose random packing, rho_0:", rho_0
     CLOSE(4)
+
+    !Run gnuplot using fortran system call of "gnuplot.pl" Perl script and convert images to animated gif with system call of ImageMagick
+    WRITE(systemcall,"(I4,A1,I4,A1,A13)") TotalLayers, " ", TotalTime, " ", output_folder
+    call system("perl davinci_solver/gnuplot.pl "//systemcall)
+    call system("chmod u+x data/"//output_folder//"/GnuplotCommands.gnu") !Have to allow permission to use the script, not sure how to change default permissions for new scripts.
+		call system("gnuplot 'data/"//output_folder//"/GnuplotCommands.gnu'")
+		call system("convert -delay 5 -loop 0 data/"//output_folder//"/*.png data/"//output_folder//"/velocity_animated.gif")
+		call system("rm data/"//output_folder//"/*.png")
 
   end subroutine output_final
 
