@@ -10,6 +10,7 @@ module davinci_2_initialise
   use davinci_1_initialvelocityfunction
   use davinci_1_lowerboundary
   use davinci_1_upperboundary
+  use davinci_1_output
 
   implicit none
 
@@ -54,25 +55,18 @@ contains
 			v(n) = InitialVelocityFunction(n, FunctionChoice)  !Initial fluid velocity set by function.
 		END DO
 
-    !Initialise density array
-    Do n=1, TotalLayers+2
-      rho(n) = DensityRelation(n)
-    END DO
-
     !Initialise dynamic friction array
     Do n=1, TotalLayers+1
       mu_1(n) = FrictionRelation(rho(n), rho(n+1))
     END DO
 
-    !Initialise Acceleration array
-    Do n=1, TotalLayers+2
-      Acceleration(n)=0.0
-    END DO
+    !Output initial system configuration to file
+    call output
 
-    !Initialise PlugArray
-    Do n=1, TotalLayers+2
-      PlugArray(n)=.FALSE.
-    END DO
+
+
+!Update plug array here??????
+
 
   end subroutine initialise
 

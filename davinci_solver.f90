@@ -5,7 +5,6 @@ PROGRAM SOLVER_rho3
 	!Fluid mass density is rho and the slab on top of the fluid applies a pressure M.
 	!Contains subroutines and functions to calculate initial velocity and mu profiles.
 
-!	use davinci_1_gnuplot
 	use davinci_1_output_final
 	use davinci_1_output
 	use davinci_2_initialise
@@ -16,14 +15,8 @@ PROGRAM SOLVER_rho3
 	!Initialise system
 	call initialise
 
-	!Write initial system to file
-	call output
-
 	!Iterate system over all timesteps
 	call iterate
-
-	!Create gnuplot command file for plotting data
-!	call gnuplot_output
 
 	!Output system parameters to file
 	call output_final

@@ -16,13 +16,28 @@ open(my $file_handle,'>', "data/".$folder."/GnuplotCommands.gnu") or die "can't 
 print $file_handle "set terminal png\n";
 print $file_handle "set xlabel 'Fluid height'\n";
 print $file_handle "set ylabel 'Velocity'\n";
-print $file_handle "set xrange [ 0 : $TotalLayers]\n";
+print $file_handle "set xrange [ 1 : $TotalLayers ]\n";
 
 my $i = 0;
 while ($i <= $TotalTime) {
   my $lowerbound = $i*$TotalLayers;
   my $upperbound = ($i+1)*$TotalLayers-1;
-  print $file_handle "set output 'data/$folder/$i.png'\n";
+  print $file_handle "set output 'data/$folder/v$i.png'\n";
+  print $file_handle "plot 'data/$folder/velocity.txt' every ::",$lowerbound,"::",$upperbound," using 1:2 with lines\n";
+  $i++
+}
+print "\n";
+
+print $file_handle "set terminal png\n";
+print $file_handle "set xlabel 'Fluid height'\n";
+print $file_handle "set ylabel 'Density'\n";
+print $file_handle "set xrange [ 1 : $TotalLayers]\n";
+
+$i = 0;
+while ($i <= $TotalTime) {
+  my $lowerbound = $i*$TotalLayers;
+  my $upperbound = ($i+1)*$TotalLayers-1;
+  print $file_handle "set output 'data/$folder/d$i.png'\n";
   print $file_handle "plot 'data/$folder/velocity.txt' every ::",$lowerbound,"::",$upperbound," using 1:2 with lines\n";
   $i++
 }
