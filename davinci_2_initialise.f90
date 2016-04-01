@@ -32,7 +32,7 @@ contains
   	K           = rho_0+alpha*P_0    !Now that alpha and P_0 have been evaluated, we can evaluate K for use in the density variation function.
     H           = TotalLayers*d      !Now that TotalLayers has been evaluated, evaluate H
 
-    FunctionChoice = 1
+    FunctionChoice = 2
     !1 for whole fluid at rest
     !2 for a linear velocity profile
     !3 for a parabolic profile with maximum at the centre
@@ -52,21 +52,21 @@ contains
 		v(1)             = lowerboundary(0) !Lower boundary velocity controlled by lowerboundary(t) function
 		v(TotalLayers+2) = upperboundary(0) !Upper boundary velocity controlled by upperboundary(t) function
 		Do n=2, TotalLayers+1
-			v(n) = InitialVelocityFunction(n, FunctionChoice)  !Initial fluid velocity set by function.
+			v(n) = InitialVelocityFunction(n)  !Initial fluid velocity set by function.
 		END DO
+
+    !Initialise density array
+    Do n=2, TotalLayers+1
+      rho(n) = DensityRelation(n)
+    END DO
 
     !Initialise dynamic friction array
     Do n=1, TotalLayers+1
-      mu_1(n) = FrictionRelation(rho(n), rho(n+1))
+      mu_1(n) = FrictionRelation(n)
     END DO
 
     !Output initial system configuration to file
     call output
-
-
-
-!Update plug array here??????
-
 
   end subroutine initialise
 

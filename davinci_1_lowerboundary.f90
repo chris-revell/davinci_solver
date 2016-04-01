@@ -13,7 +13,7 @@ contains
 
     integer, intent(in) :: t
 
-    lowerboundary = 0.0
+    lowerboundary = 10.0
 
   end function lowerboundary
 

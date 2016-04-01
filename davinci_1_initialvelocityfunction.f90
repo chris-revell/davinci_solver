@@ -11,16 +11,15 @@ module davinci_1_initialvelocityfunction
 
 contains
 
-  REAL FUNCTION InitialVelocityFunction(n, FunctionChoice)
+  REAL FUNCTION InitialVelocityFunction(n)
 
-    INTEGER n
-    INTEGER FunctionChoice
+    INTEGER, intent(in) :: n
 
     IF (FunctionChoice.EQ.1) THEN !At rest
       InitialVelocityFunction = 10.0
 
-!    ELSE IF (FunctionChoice.EQ.2) THEN	!Linear
-!      InitialVelocityFunction = v_bottom + (n-1)*(v_top-v_bottom)/(TotalLayers+1)
+    ELSE IF (FunctionChoice.EQ.2) THEN	!Linear
+      InitialVelocityFunction = 15.0 + 5.0*(REAL(n)-1.0)/(REAL(TotalLayers)+1.0)
 
 !    ELSE IF (FunctionChoice.EQ.3) THEN	!Parabolic with maximum in middle
 !      InitialVelocityFunction = (v_bottom + (TotalLayers+1)*(TotalLayers+1)/4 - ((n-1)-(TotalLayers+1)/2)*((n-1)-(TotalLayers+1)/2))

@@ -108,7 +108,7 @@ contains
       END DO
       P = P_0 + MassAboveLayer*g
       !Calculate max force using normal force and static friction
-      MaxForce = mu_1*P
+      MaxForce = mu_2*P
 
 			IF (MaxForce.LT.RequiredForce) THEN		!If max frictional force is smaller than that which would be required to maintain the same acceleration in this layer as the rest of the plug
 				PlugArray(n+i) = .TRUE.									!This layer is still part of the lower plug
@@ -146,54 +146,39 @@ contains
     enddo
     !Note that this sets acceleration for all plug layers to be equal, but *does not* set their speeds to be equal. This will not cause splitting because relative velocities are preserved, but should perhaps be changed. Exactly what speed to choose to set all layers to remains undetermined.
 
-
-!This section repeated in velocityupdate?
-!***************************************************************************
-		!The following terms prevent layers from overshooting plug formation
-
+		!The following terms prevent plug from overshooting if it catches up to the layer above it.
 		dv_lower = v(n)-v(n-1)
 		dv_upper = v(n+b)-v(n+b-1)
 		dv_lower_prime = dv_lower + PlugAcceleration*dt
 		dv_upper_prime = dv_upper - PlugAcceleration*dt
 
 		IF ((dv_lower*dv_lower_prime).GE.0) THEN
-			GO TO 1
+      IF ((dv_upper*dv_upper_prime).GE.0) THEN
+  			DO i=0, b-1
+  				v(n+i)=v(n+i)+PlugAcceleration*dt
+  			END DO
+  		ELSE
+  			DO i=0, b-1
+  				v(n+i)=v(n+b)
+  			END DO
+  		END IF
 		ELSE
-			GO TO 2
+      IF ((dv_upper*dv_upper_prime).GE.0) THEN
+        DO i=0, b-1
+          v(n+i)=v(n-1)
+        END DO
+      ELSE
+        IF ((ABS(dv_upper)).LE.(ABS(dv_lower))) THEN		!Forms plug with the first one it catches up to
+          DO i=0, b-1
+            v(n+i)=v(n+b)
+          END DO
+        ELSE
+          DO i=0, b-1
+            v(n+i)=v(n-1)
+          END DO
+        END IF
+      END IF
 		END IF
-
-		1 CONTINUE
-		IF ((dv_upper*dv_upper_prime).GE.0) THEN
-			DO i=0, b-1
-				v(n+i)=v(n+i)+PlugAcceleration*dt
-			END DO
-		ELSE
-			DO i=0, b-1
-				v(n+i)=v(n+b)
-			END DO
-		END IF
-		GO TO 3
-
-		2 CONTINUE
-		IF ((dv_upper*dv_upper_prime).GE.0) THEN
-			DO i=0, b-1
-				v(n+i)=v(n-1)
-			END DO
-			GO TO 3
-		ELSE
-			IF ((ABS(dv_upper)).LE.(ABS(dv_lower))) THEN		!Forms plug with the first one it catches up to
-				DO i=0, b-1
-					v(n+i)=v(n+b)
-				END DO
-			ELSE
-				DO i=0, b-1
-					v(n+i)=v(n-1)
-				END DO
-			END IF
-		END IF
-
-		3 CONTINUE
-
 
 	END SUBROUTINE PlugTreatment
 

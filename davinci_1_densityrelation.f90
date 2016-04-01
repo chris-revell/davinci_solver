@@ -16,7 +16,9 @@ contains
 !    REAL :: z
 !    z=REAL(n-1)*d
 !    DensityRelation = K*EXP(alpha*g*(H-z))
-    DensityRelation = 1
+
+    DensityRelation = rho_0*LOG(TotalLayers-0.5*n) !Pulled off the top of my head
+
   END FUNCTION DensityRelation
 
 end module davinci_1_densityrelation

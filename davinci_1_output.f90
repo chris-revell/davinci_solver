@@ -20,12 +20,12 @@ contains
 
     !Write velocity profile to results file, excluding upper and lower boundary. Whole system at each timestep written as one long column for ease of plotting.
     do n=2, TotalLayers+1
-      WRITE(6, "(I4,A2,F12.6)") n-1, ", ", v(n)
+      WRITE(6, "(F12.6,A2,I4)") v(n), ", ", n-1
     enddo
 
     !Write density profile to results file. Whole system at each timestep written as one long column for ease of plotting.
     do n=2, TotalLayers+1
-      WRITE(7, "(I4,A2,F12.6)") n-1, ", ", rho(n)
+      WRITE(7, "(F12.6,A2,I4)") rho(n), ", ", n-1
     enddo
 
   end subroutine output
