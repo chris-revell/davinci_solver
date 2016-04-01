@@ -14,6 +14,7 @@ contains
 
     INTEGER, INTENT(IN) :: n      !Layer at which PlugTreatment is called
 		INTEGER :: i
+    INTEGER :: j
 		INTEGER :: a=0				      	!Plug layer counter. Number of layers in plug.
 		INTEGER :: b=0					      !Plug counter after split
 		REAL    :: PlugCondition  		!Effectively dv_upper. Value allows us to determine the end of a plug.
@@ -28,24 +29,25 @@ contains
 
 
 		REAL    :: RequiredForce			!Force that must be applied to the top of a layer in the plug to maintain the same acceleration for this layer as for the rest of the plug
-		REAL    :: FrictionalForce		!Maximum force that can be applied at the top of the layer within the plug
-		REAL    :: F_F_1						  !Frictional force expression too long, so expression broken into parts
-		REAL    :: R_F_1						  !Same for required force
+!		REAL    :: FrictionalForce		!Maximum force that can be applied at the top of the layer within the plug
+!		REAL    :: F_F_1						  !Frictional force expression too long, so expression broken into parts
+!		REAL    :: R_F_1						  !Same for required force
+    REAL    :: MaxForce
 
 		a=1
 		b=0
-		PlugCondition=0.0
+!		PlugCondition=0.0
 
-		!Calculate number of layers in plug
-    !Keep adding incrementing a for as many layers as satisfy the condition
-    !that upper boundary velocity displacement is less than epsilon
-    !Then a
+		!Calculate number of layers in plug. Keep adding incrementing a for as many
+    !layers as satisfy the condition that upper boundary velocity difference is less than epsilon (and so approcimately equal to zero)
     DO WHILE(ABS(v(n+a)-v(n+a-1)).LT.epsilon)
+      PlugArray(n+a) = .TRUE.
       a=a+1
     ENDDO
     !a now equals the number of layers in the plug
+    !All elements from n to n+a in PlugArray are now = .TRUE.
 
-		!Find mass above plug and calculate normalfoce on plug
+		!Find mass above plug and calculate normalforce on plug
 		MassAbovePlug = 0
 		DO i=n+a, TotalLayers+1
 			MassAbovePlug = MassAbovePlug + rho(i)*d
@@ -84,27 +86,34 @@ contains
     !Calculate plug acceleration from forces on either edge of plug.
 		PlugAcceleration = (F_top + F_bottom)/PlugMass
 
-    !Set acceleration of layers within the plug
-    do i = n, n+a-1
-      Acceleration(i) = PlugAcceleration
-    enddo
-
-
-!This section deals with plug splitting
+!This section checks for plug splitting
 !****************************************************************************************
 
 		DO i=0, (a-1)
 
-			F_F_1 = (EXP(-alpha*g*d*(n+i))-EXP(-alpha*g*d*(TotalLayers+1)))/(1-EXP(-alpha*g*d))
-			FrictionalForce = mu_2*P_0+mu_2*d*g*K*EXP(alpha*g*d*TotalLayers)*F_F_1								 !Frictional force that actually is applied on the top of layer
+!			F_F_1 = (EXP(-alpha*g*d*(n+i))-EXP(-alpha*g*d*(TotalLayers+1)))/(1-EXP(-alpha*g*d))
+!			FrictionalForce = mu_2*P_0+mu_2*d*g*K*EXP(alpha*g*d*TotalLayers)*F_F_1								 !Frictional force that actually is applied on the top of layer
 
-			R_F_1 = (EXP(-alpha*g*d*n)-EXP(-alpha*g*d*(n+i+1)))/(1-EXP(-alpha*g*d))
-			RequiredForce = d*PlugAcceleration*K*EXP(alpha*g*d*(TotalLayers+1))*R_F_1 - F_bottom 	!Stress that must be applied to the top of the layer under consideration in order to maintain the same acceleration as the rest of the plug give some stress on the bottom
+!			R_F_1 = (EXP(-alpha*g*d*n)-EXP(-alpha*g*d*(n+i+1)))/(1-EXP(-alpha*g*d))
+!			RequiredForce = d*PlugAcceleration*K*EXP(alpha*g*d*(TotalLayers+1))*R_F_1 - F_bottom 	!Stress that must be applied to the top of the layer under consideration in order to maintain the same acceleration as the rest of the plug give some stress on the bottom
 
-			IF (ABS(FrictionalForce).LT.ABS(RequiredForce)) THEN		!If max frictional force is smaller than that which would be required to maintain the same acceleration in this layer as the rest of the plug
+      !Force on the top of a given layer in the plug required to combine with the force on the bottom of the plug and give this layer the same acceleration as the plug.
+      RequiredForce = ABS(PlugAcceleration*rho(n+i)*d-F_bottom)
+
+      !Calculate the max possible force on the top of the layer from static friction
+      !First compute normal force on upper edge of layer
+      MassAboveLayer=0
+      Do j=(n+i+1), TotalLayers+1
+        MassAboveLayer = MassAboveLayer + rho(j)*d
+      END DO
+      P = P_0 + MassAboveLayer*g
+      !Calculate max force using normal force and static friction
+      MaxForce = mu_1*P
+
+			IF (MaxForce.LT.RequiredForce) THEN		!If max frictional force is smaller than that which would be required to maintain the same acceleration in this layer as the rest of the plug
 				PlugArray(n+i) = .TRUE.									!This layer is still part of the lower plug
 				b=b+1													!Lower plug layer counter incremented
-				GO TO 83												!Exit DO statement and do not consider the remaining layers in the original plug or set their PlugArray values to zero.
+				EXIT												!Exit DO statement and do not consider the remaining layers in the original plug or set their PlugArray values to zero.
 			ELSE
 				PlugArray(n+i) = .TRUE.
 				b=b+1
@@ -112,7 +121,6 @@ contains
 		END DO
 
 		!Redefine signs and forces for the new bottom plug. If the plug does not split, a=b so these will work out the same anyway.
-		83 CONTINUE
 		MassAbovePlug = 0
 		DO i=n+b, TotalLayers+1
 			MassAbovePlug = MassAbovePlug + rho(i)*d
@@ -132,6 +140,11 @@ contains
 
 		PlugAcceleration = (F_top + F_bottom)/PlugMass
 
+    !Set acceleration of layers within the plug
+    do i = n, n+b-1
+      Acceleration(i) = PlugAcceleration
+    enddo
+    !Note that this sets acceleration for all plug layers to be equal, but *does not* set their speeds to be equal. This will not cause splitting because relative velocities are preserved, but should perhaps be changed. Exactly what speed to choose to set all layers to remains undetermined.
 
 
 !This section repeated in velocityupdate?

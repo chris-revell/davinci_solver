@@ -74,7 +74,7 @@ contains
           ELSE
             v(n)=v(n-1)
           END IF
-        END IF 
+        END IF
       END IF
     END DO
 
