@@ -24,14 +24,11 @@ module davinci_0_variables
   Real dv_upper_prime									!Upper velocity difference after acceleration of layer
   REAL sign_lower												!Sign of lower velocity difference
   REAL sign_upper												!Sign of upper velocity difference
-!  REAL v_top											  !Boundary condition - upper boundary velocity
-!  REAL v_bottom									  !Boundary condition - lower boundary velocity (normally zero)
   INTEGER t												!Time counter
   INTEGER n												!Layer counter
   INTEGER FunctionChoice					!For choosing between preprogrammed functions. Ranges from 1 to 6.
   INTEGER TotalLayers							!Total number of layers in fluid
   INTEGER TotalTime								!Number of dt intervals after which to end simulation
-!  CHARACTER(LEN=2) x						   	!Numerical label for friction and initial velocity profiles
   CHARACTER(LEN=8) :: date        !Date of simulation run
   CHARACTER(LEN=4) :: time        !Time of simulation run
   CHARACTER(LEN=13):: output_folder !Name of folder created for data output, labelled according to date and time of run.
