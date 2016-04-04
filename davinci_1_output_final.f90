@@ -42,8 +42,8 @@ contains
     call system("perl davinci_solver/gnuplot.pl "//systemcall)
     call system("chmod u+x data/"//output_folder//"/GnuplotCommands.gnu") !Have to allow permission to use the script, not sure how to change default permissions for new scripts.
 		call system("gnuplot 'data/"//output_folder//"/GnuplotCommands.gnu'")
-		call system("convert -delay 5 -loop 0 data/"//output_folder//"/v*.png data/"//output_folder//"/velocity_animated.gif")
-    call system("convert -delay 5 -loop 0 data/"//output_folder//"/d*.png data/"//output_folder//"/density_animated.gif")
+		call system("convert -delay 20 -loop 0 data/"//output_folder//"/v*.png data/"//output_folder//"/velocity_animated.gif")
+    call system("convert -delay 20 -loop 0 data/"//output_folder//"/d*.png data/"//output_folder//"/density_animated.gif")
 		call system("rm data/"//output_folder//"/*.png")
 
   end subroutine output_final

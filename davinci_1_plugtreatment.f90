@@ -10,9 +10,9 @@ module davinci_1_plugtreatment
 
 contains
 
-  SUBROUTINE PlugTreatment(n)
+  SUBROUTINE PlugTreatment(m)
 
-    INTEGER, INTENT(IN) :: n      !Layer at which PlugTreatment is called
+    INTEGER, INTENT(IN) :: m      !Layer at which PlugTreatment is called
 		INTEGER :: i
     INTEGER :: j
 		INTEGER :: a=0				      	!Plug layer counter. Number of layers in plug.
@@ -61,8 +61,8 @@ contains
 		END DO
 
     !Signs of velocity differences at the top and bottom of the plug
-		s_bottom=SIGN(1.0,(v(n)-v(n-1)))
-		s_top=SIGN(1.0,(v(n+a)-v(n+a-1)))
+		s_bottom = SIGN(1.0,(v(n)-v(n-1)))
+		s_top    = SIGN(1.0,(v(n+a)-v(n+a-1)))
 
     !When calculating acceleration of plug, must consider several conditions
     !Firstly, plug stationary relative to upper boundary

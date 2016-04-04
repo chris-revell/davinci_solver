@@ -25,7 +25,7 @@ module davinci_0_variables
   REAL sign_lower												!Sign of lower velocity difference
   REAL sign_upper												!Sign of upper velocity difference
   INTEGER t												!Time counter
-  INTEGER n												!Layer counter
+  INTEGER n												!Useful counter
   INTEGER FunctionChoice					!For choosing between preprogrammed functions. Ranges from 1 to 6.
   INTEGER TotalLayers							!Total number of layers in fluid
   INTEGER TotalTime								!Number of dt intervals after which to end simulation
