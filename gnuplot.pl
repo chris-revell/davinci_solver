@@ -19,7 +19,7 @@ print $file_handle "set ylabel 'Fluid height'\n";
 #print $file_handle "set xrange [ 1 : $TotalLayers ]\n";
 
 my $i = 0;
-while ($i <= $TotalTime) {
+while ($i <= $TotalTime/100) {
   my $lowerbound = $i*$TotalLayers;
   my $upperbound = ($i+1)*$TotalLayers-1;
   print $file_handle "set output 'data/$folder/v$i.png'\n";
@@ -34,7 +34,7 @@ print $file_handle "set ylabel 'Fluid height'\n";
 #print $file_handle "set xrange [ 1 : $TotalLayers]\n";
 
 $i = 0;
-while ($i <= $TotalTime) {
+while ($i <= $TotalTime/100) {
   my $lowerbound = $i*$TotalLayers;
   my $upperbound = ($i+1)*$TotalLayers-1;
   print $file_handle "set output 'data/$folder/d$i.png'\n";

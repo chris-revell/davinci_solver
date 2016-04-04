@@ -31,6 +31,8 @@ contains
     TotalLayers = 10
   	K           = rho_0+alpha*P_0    !Now that alpha and P_0 have been evaluated, we can evaluate K for use in the density variation function.
     H           = TotalLayers*d      !Now that TotalLayers has been evaluated, evaluate H
+    TimeOut     = TotalTime/100
+    t           = 0
 
     FunctionChoice = 2
     !1 for whole fluid at rest
@@ -39,7 +41,6 @@ contains
     !4 for a parabolic profile with maxima at the boundaries
     !5 for two plugs: one at each boundary, the upper one at the same velocity as the upper boundary, the other at rest
     !6 for two plugs: one at each boundary, the upper one at a lower velocity than the upper boundary, the other at rest
-
 
     !Allocate system array dimensions
     ALLOCATE(mu_1(TotalLayers+1))

@@ -46,7 +46,9 @@ contains
       END DO
 
       !Output timestep to file
-      call output
+      if (mod(t,TimeOut).EQ.0) then
+        call output
+      endif
 
     END DO
 

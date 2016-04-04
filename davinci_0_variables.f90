@@ -9,7 +9,7 @@ module davinci_0_variables
   REAL, PARAMETER :: mu_2 =0.5					!Static coefficient of friction
   REAL, PARAMETER :: g=10								!gravitational acceleration
   REAL, PARAMETER :: d=1								!Fluid layer thickness
-  REAL, PARAMETER :: epsilon=0.0000001	!Accuracy to which velocity differences are defined as zero or non zero
+  REAL, PARAMETER :: epsilon=0.001    	!Accuracy to which velocity differences are defined as zero or non zero
   REAL, PARAMETER :: rho_0=1						!Loose random packing density of grains, assumed
 
   !Define variables for problem
@@ -29,6 +29,7 @@ module davinci_0_variables
   INTEGER FunctionChoice					!For choosing between preprogrammed functions. Ranges from 1 to 6.
   INTEGER TotalLayers							!Total number of layers in fluid
   INTEGER TotalTime								!Number of dt intervals after which to end simulation
+  INTEGER :: TimeOut
   CHARACTER(LEN=8) :: date        !Date of simulation run
   CHARACTER(LEN=4) :: time        !Time of simulation run
   CHARACTER(LEN=13):: output_folder !Name of folder created for data output, labelled according to date and time of run.
