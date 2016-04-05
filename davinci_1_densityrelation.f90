@@ -17,7 +17,7 @@ contains
 !    z=REAL(n-1)*d
 !    DensityRelation = K*EXP(alpha*g*(H-z))
 
-    DensityRelation = rho_0*LOG(TotalLayers-0.5*n) !Pulled off the top of my head
+    DensityRelation = 2*rho_0*LOG(TotalLayers-0.5*n) !Pulled off the top of my head
 
   END FUNCTION DensityRelation
 

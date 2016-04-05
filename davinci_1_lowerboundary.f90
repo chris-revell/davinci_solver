@@ -13,7 +13,7 @@ contains
 
     integer, intent(in) :: t
 
-    lowerboundary = 10.0
+    lowerboundary = 20*SIN(real(t))
 
   end function lowerboundary
 

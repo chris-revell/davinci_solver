@@ -6,6 +6,8 @@ module davinci_1_velocityupdate
   use davinci_0_variables
   use davinci_0_arrays
   use davinci_1_plugtreatment
+  use davinci_1_lowerboundary
+  use davinci_1_upperboundary
 
   implicit none
 
@@ -77,6 +79,9 @@ contains
         END IF
       END IF
     END DO
+
+    v(TotalLayers+2) = upperboundary(t)
+    v(1)             = lowerboundary(t)
 
   end subroutine velocityupdate
 end module davinci_1_velocityupdate

@@ -43,6 +43,9 @@ contains
     DO WHILE(ABS(v(n+a)-v(n+a-1)).LT.epsilon)
       PlugArray(n+a) = .TRUE.
       a=a+1
+      if ((n+a).EQ.(TotalLayers+2)) then
+        EXIT
+      ENDIF
     ENDDO
     !a now equals the number of layers in the plug
     !All elements from n to n+a in PlugArray are now = .TRUE.

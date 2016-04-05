@@ -39,7 +39,7 @@ contains
     TimeOut     = TotalTime/100
     t           = 0
 
-    FunctionChoice = 2
+    FunctionChoice = 1
     !1 for whole fluid at rest
     !2 for a linear velocity profile
     !3 for a parabolic profile with maximum at the centre

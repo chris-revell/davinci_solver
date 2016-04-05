@@ -25,14 +25,6 @@ contains
         PlugArray(n)=.FALSE.
       END DO
 
-!Do we need this section?
-!**************************************************************
-      !Refresh acceleration array
-!      Do n=1, TotalLayers+2
-!        Acceleration(n)=0.0
-!      END DO
-!**************************************************************
-
       call velocityupdate
 
       !Recalculate density array
@@ -41,7 +33,7 @@ contains
       END DO
 
       !Recalculate dynamic friction array
-      Do n=2, TotalLayers+2
+      Do n=1, TotalLayers+1
         mu_1(n) = FrictionRelation(n)
       END DO
 
