@@ -34,7 +34,7 @@ contains
 !**************************************************************
 
       call velocityupdate
-      write(*,*) Acceleration(:)
+
       !Recalculate density array
       Do n=1, TotalLayers+2
         rho(n) = DensityRelation(n)

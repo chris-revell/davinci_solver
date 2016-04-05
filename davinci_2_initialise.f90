@@ -24,11 +24,16 @@ contains
     call system("mkdir data/"//output_folder)
 
     !Initialise parameters
-    dt          = 1
+    mu_2 =0.5				   	  !Static coefficient of friction
+    g=10							    !gravitational acceleration
+    d=1								    !Fluid layer thickness
+    epsilon=0.001    	    !Accuracy to which velocity differences are defined as zero or non zero
+    rho_0=1						    !Loose random packing density of grains, assumed
+    dt          = 0.002
     P_0         = 1
     alpha       = 1
-    TotalTime   = 1000
-    TotalLayers = 10
+    TotalTime   = 10000     !Warning: need to vary string length at line 14 and output formatting in call to perl script at line 41 of davinci_1_output_final to adjust for new integer length eg if going from 1000 to 10000 need to change output format from I4 to I5
+    TotalLayers = 1000      !Warning: need to vary string length at line 14 and output formatting in call to perl script at line 41 of davinci_1_output_final to adjust for new integer length eg if going from 1000 to 10000 need to change output format from I4 to I5
   	K           = rho_0+alpha*P_0    !Now that alpha and P_0 have been evaluated, we can evaluate K for use in the density variation function.
     H           = TotalLayers*d      !Now that TotalLayers has been evaluated, evaluate H
     TimeOut     = TotalTime/100

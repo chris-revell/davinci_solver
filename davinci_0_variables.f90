@@ -5,12 +5,12 @@ module davinci_0_variables
 
   implicit none
 
-  !Set parameters for problem
-  REAL, PARAMETER :: mu_2 =0.5					!Static coefficient of friction
-  REAL, PARAMETER :: g=10								!gravitational acceleration
-  REAL, PARAMETER :: d=1								!Fluid layer thickness
-  REAL, PARAMETER :: epsilon=0.001    	!Accuracy to which velocity differences are defined as zero or non zero
-  REAL, PARAMETER :: rho_0=1						!Loose random packing density of grains, assumed
+  !Define parameters for problem
+  REAL :: mu_2 					!Static coefficient of friction
+  REAL :: g							!gravitational acceleration
+  REAL :: d							!Fluid layer thickness
+  REAL :: epsilon     	!Accuracy to which velocity differences are defined as zero or non zero
+  REAL :: rho_0					!Loose random packing density of grains, assumed
 
   !Define variables for problem
   REAL P_0												!Pressure exerted by upper boundary

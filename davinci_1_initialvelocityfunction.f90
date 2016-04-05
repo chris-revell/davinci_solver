@@ -16,7 +16,7 @@ contains
     INTEGER, intent(in) :: n
 
     IF (FunctionChoice.EQ.1) THEN !At rest
-      InitialVelocityFunction = 10.0
+      InitialVelocityFunction = 0.0
 
     ELSE IF (FunctionChoice.EQ.2) THEN	!Linear
       InitialVelocityFunction = 15.0 + 5.0*(REAL(n)-1.0)/(REAL(TotalLayers)+1.0)
