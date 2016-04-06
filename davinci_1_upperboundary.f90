@@ -11,7 +11,7 @@ contains
 
   real function upperboundary(t)
 
-    integer, intent(in) :: t
+    real, intent(in) :: t
 
     upperboundary = 0.0
 

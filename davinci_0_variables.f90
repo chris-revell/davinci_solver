@@ -10,7 +10,7 @@ module davinci_0_variables
   REAL :: g							!gravitational acceleration
   REAL :: d							!Fluid layer thickness
   REAL :: epsilon     	!Accuracy to which velocity differences are defined as zero or non zero
-  REAL :: rho_0					!Loose random packing density of grains, assumed
+  REAL :: rho_0					!Prefactor in density relation
 
   !Define variables for problem
   REAL P_0												!Pressure exerted by upper boundary
@@ -24,12 +24,12 @@ module davinci_0_variables
   Real dv_upper_prime									!Upper velocity difference after acceleration of layer
   REAL sign_lower												!Sign of lower velocity difference
   REAL sign_upper												!Sign of upper velocity difference
-  INTEGER t												!Time counter
+  REAL :: t												!Time counter
   INTEGER n												!Useful counter
   INTEGER FunctionChoice					!For choosing between preprogrammed functions. Ranges from 1 to 6.
   INTEGER TotalLayers							!Total number of layers in fluid
   INTEGER TotalTime								!Number of dt intervals after which to end simulation
-  INTEGER :: TimeOut
+  REAL :: TimeOut
   CHARACTER(LEN=8) :: date        !Date of simulation run
   CHARACTER(LEN=4) :: time        !Time of simulation run
   CHARACTER(LEN=13):: output_folder !Name of folder created for data output, labelled according to date and time of run.
@@ -39,7 +39,7 @@ module davinci_0_variables
   CHARACTER(LEN=11) InputFilename	!Filename of initial velocity profile input file
   CHARACTER(LEN=5) Timebound			!For gnuplot file - equal to (TotalTime+1)
   CHARACTER(LEN=5) Layerbound			!For gnuplot file - equal to (TotalLayers+2)
-  REAL alpha											!Parameter that sets exponential variation of fluid density (see FUNCTION DensityRelation(n))
+  REAL alpha											!Parameter that sets exponential variation of fluid density (see FUNCTION densityupdate(n))
   REAL K													!Factor for density relation that should include velocity dependence but is for now constant. K=rho_0 + P_0 + f(v). For now set f(v)=0.
   REAL H													!Height of fluid. H=TotalLayers*d
 

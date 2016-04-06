@@ -5,8 +5,8 @@ module davinci_2_iterate
 
   use davinci_0_arrays
   use davinci_0_variables
-  use davinci_1_densityrelation
-  use davinci_1_frictionrelation
+  use davinci_1_densityupdate
+  use davinci_1_frictionupdate
   use davinci_1_plugtreatment
   use davinci_1_output
   use davinci_1_velocityupdate
@@ -18,7 +18,7 @@ contains
   subroutine iterate
 
     !Calculate velocity profile at all remaining timesteps and write to file.
-    DO t=1, TotalTime+1									!Time ticker must run from 1 since this is the index of the first array element
+    DO WHILE (t.LE.TotalTime)
 
       !Refresh PlugArray for each new timestep
       Do n=1, TotalLayers+2
@@ -28,19 +28,17 @@ contains
       call velocityupdate
 
       !Recalculate density array
-      Do n=1, TotalLayers+2
-        rho(n) = DensityRelation(n)
-      END DO
+      call densityupdate
 
       !Recalculate dynamic friction array
-      Do n=1, TotalLayers+1
-        mu_1(n) = FrictionRelation(n)
-      END DO
+      call frictionupdate
 
       !Output timestep to file
       if (mod(t,TimeOut).EQ.0) then
         call output
       endif
+
+      t = t + dt
 
     END DO
 

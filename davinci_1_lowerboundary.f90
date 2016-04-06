@@ -11,9 +11,10 @@ contains
 
   real function lowerboundary(t)
 
-    integer, intent(in) :: t
+    real, intent(in) :: t
 
-    lowerboundary = 20*SIN(real(t))
+    lowerboundary = 20.0
+    !lowerboundary = 20*SIN(t)
 
   end function lowerboundary
 

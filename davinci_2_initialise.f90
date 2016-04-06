@@ -5,8 +5,8 @@ module davinci_2_initialise
 
   use davinci_0_arrays
   use davinci_0_variables
-  use davinci_1_densityrelation
-  use davinci_1_frictionrelation
+  use davinci_1_densityupdate
+  use davinci_1_frictionupdate
   use davinci_1_initialvelocityfunction
   use davinci_1_lowerboundary
   use davinci_1_upperboundary
@@ -32,14 +32,14 @@ contains
     dt          = 0.002
     P_0         = 1
     alpha       = 1
-    TotalTime   = 10000     !Warning: need to vary string length at line 14 and output formatting in call to perl script at line 41 of davinci_1_output_final to adjust for new integer length eg if going from 1000 to 10000 need to change output format from I4 to I5
+    TotalTime   = 10     !Warning: need to vary string length at line 14 and output formatting in call to perl script at line 41 of davinci_1_output_final to adjust for new integer length eg if going from 1000 to 10000 need to change output format from I4 to I5
     TotalLayers = 1000      !Warning: need to vary string length at line 14 and output formatting in call to perl script at line 41 of davinci_1_output_final to adjust for new integer length eg if going from 1000 to 10000 need to change output format from I4 to I5
   	K           = rho_0+alpha*P_0    !Now that alpha and P_0 have been evaluated, we can evaluate K for use in the density variation function.
     H           = TotalLayers*d      !Now that TotalLayers has been evaluated, evaluate H
     TimeOut     = TotalTime/100
     t           = 0
 
-    FunctionChoice = 1
+    FunctionChoice = 2
     !1 for whole fluid at rest
     !2 for a linear velocity profile
     !3 for a parabolic profile with maximum at the centre
@@ -55,24 +55,21 @@ contains
     ALLOCATE(rho(TotalLayers+2))
 
 		!Initialise velocity array
-		v(1)             = lowerboundary(0) !Lower boundary velocity controlled by lowerboundary(t) function
-		v(TotalLayers+2) = upperboundary(0) !Upper boundary velocity controlled by upperboundary(t) function
+		v(1)             = lowerboundary(0.0) !Lower boundary velocity controlled by lowerboundary(t) function
+		v(TotalLayers+2) = upperboundary(0.0) !Upper boundary velocity controlled by upperboundary(t) function
 		Do n=2, TotalLayers+1
 			v(n) = InitialVelocityFunction(n)  !Initial fluid velocity set by function.
 		END DO
 
     !Initialise density array
-    Do n=2, TotalLayers+1
-      rho(n) = DensityRelation(n)
-    END DO
+    call densityupdate
 
     !Initialise dynamic friction array
-    Do n=1, TotalLayers+1
-      mu_1(n) = FrictionRelation(n)
-    END DO
+    call frictionupdate
 
     !Output initial system configuration to file
     call output
+    t=t+dt
 
   end subroutine initialise
 
