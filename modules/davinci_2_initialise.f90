@@ -21,7 +21,7 @@ contains
     !Extract date and time, create folder to store data in
     call date_and_time(DATE=date,TIME=time)
     output_folder = date//"_"//time
-    call system("mkdir data/"//output_folder)
+    call system("mkdir ../data/"//output_folder)
 
     !Initialise parameters
     mu_2 =0.5				   	  !Static coefficient of friction
