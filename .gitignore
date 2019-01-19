@@ -1,0 +1,16 @@
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.cc
+!*.cpp
+!*.hpp
+!.gitignore
+!*.sh
+!readme.txt
+!*.pl
+
+# Unignore all dirs
+!/src/
+!/scripts/
+!/modules/
